@@ -1,0 +1,62 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+header {
+	display: flex;
+	align-content: center;
+	background-color: blue;
+	color: bisque;
+}
+#logo-pic {
+	width: 5%;
+	align-self: center;
+}
+h1 {
+	font-size: 40px;
+	display: inline-block;
+	align-self: center;
+}
+main {
+	display: grid;
+	grid-template-columns: 8fr 2fr 2fr 2fr;
+	grid-template-rows: 3fr 1fr;
+}
+#results {
+	grid-row-start: 1;
+	grid-row-end: 3;
+	grid-column-start: 1;
+	grid-column-end: 1;
+	background-color: aqua;
+}
+.images {
+	grid-row-start: 1;
+	grid-row-end: 1;
+	grid-column-start: 2;
+	grid-column-end: 2;
+	background-color: coral;
+	display: flex;
+}
+#instructions {
+	grid-row-start: 2;
+	grid-row-end: 2;
+	grid-column-start: 2;
+	grid-column-end: 2;
+	background-color: lightgreen;
+	padding: 5px;
+	line-height: 1.3rem;
+}
+section img {
+	width: 150px;
+	margin: 10px;
+	border: 5px solid transparent;
+}
+section img:hover {
+	border: 5px solid blue;
+	cursor: pointer;
+}
+.not-clickable:hover {
+	border: 5px solid transparent;
+}
