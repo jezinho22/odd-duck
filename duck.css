@@ -31,7 +31,7 @@ main {
 	grid-column-end: 1;
 	background-color: aqua;
 }
-.images {
+.toyContainer {
 	grid-row-start: 1;
 	grid-row-end: 1;
 	grid-column-start: 2;
@@ -59,4 +59,8 @@ section img:hover {
 }
 .not-clickable:hover {
 	border: 5px solid transparent;
+}
+li {
+	font-size: 10px;
+	line-height: 1.05rem;
 }

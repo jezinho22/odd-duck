@@ -1,9 +1,9 @@
 console.log("Script linked");
 
-let toyContainer = document.querySelector(".images");
-let image1 = document.querySelector(".images img:first-child");
-let image2 = document.querySelector(".images img:nth-child(2)");
-let image3 = document.querySelector(".images img:nth-child(3)");
+let toyContainer = document.querySelector(".toyContainer");
+let image1 = document.querySelector(".toyContainer img:first-child");
+let image2 = document.querySelector(".toyContainer img:nth-child(2)");
+let image3 = document.querySelector(".toyContainer img:nth-child(3)");
 
 console.log(image1);
 
@@ -17,10 +17,15 @@ const state = {
 function Toy(name, src) {
 	this.name = name;
 	this.src = src;
-	views = 0;
-	clicks = 0;
+	this.views = 5;
+	this.clicks = 1;
 	// console.log(this.name + " created");
 }
+Toy.prototype.perCentLiked = function () {
+	console.log(this.views);
+	return Math.round((this.clicks / this.views) * 100) + "%";
+};
+
 let bag = new Toy("bag", "./images/bag.jpg");
 let banana = new Toy("banana", "./images/banana.jpg");
 let bathroom = new Toy("bathroom", "./images/bathroom.jpg");
@@ -97,6 +102,19 @@ function displayImages() {
 
 displayImages();
 
+function displayResults() {
+	let ul = document.querySelector("#results");
+
+	for (i = 0; i < state.allToys.length; i++) {
+		let li = document.createElement("li");
+		li.textContent = `${state.allToys[i].name}: ${
+			state.allToys[i].views
+		} views and ${state.allToys[i].clicks} likes = ${state.allToys[
+			i
+		].perCentLiked()}`;
+		ul.appendChild(li);
+	}
+}
 function picClick(event) {
 	console.log("picClick is firing");
 	let toyName = event.target.alt;
@@ -109,6 +127,7 @@ function picClick(event) {
 	}
 	if (totalClicks == clicksAllowed) {
 		toyContainer.removeEventListener("click", picClick);
+		displayResults();
 		// toyContainer.className += " not-clickable";
 	} else {
 		displayImages();
