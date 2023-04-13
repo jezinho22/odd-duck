@@ -81,29 +81,26 @@ function comparePic(imgIndex) {
 		return true;
 	}
 }
+let lastViewing = [];
 function displayImages() {
-	let imgIndex1 = randomNumber();
-	let imgIndex2 = randomNumber();
-	let imgIndex3 = randomNumber();
+	let imgIndex1;
+	let imgIndex2;
+	let imgIndex3;
 
 	while (
-		comparePic(imgIndex1) ||
-		comparePic(imgIndex2) ||
-		comparePic(imgIndex3)
+		imgIndex1 === imgIndex2 ||
+		imgIndex2 === imgIndex3 ||
+		imgIndex3 === imgIndex1 ||
+		lastViewing.includes(imgIndex1) ||
+		lastViewing.includes(imgIndex2) ||
+		lastViewing.includes(imgIndex3)
 	) {
 		imgIndex1 = randomNumber();
 		imgIndex2 = randomNumber();
 		imgIndex3 = randomNumber();
-		while (
-			imgIndex1 === imgIndex2 ||
-			imgIndex2 === imgIndex3 ||
-			imgIndex3 === imgIndex1
-		) {
-			imgIndex1 = randomNumber();
-			imgIndex2 = randomNumber();
-			imgIndex3 = randomNumber();
-		}
 	}
+
+	lastViewing = [imgIndex1, imgIndex2, imgIndex3];
 
 	image1.src = state.allToys[imgIndex1].src;
 	image1.alt = state.allToys[imgIndex1].name;
