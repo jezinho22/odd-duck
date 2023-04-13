@@ -8,7 +8,7 @@ let image3 = document.querySelector(".toyContainer img:nth-child(3)");
 console.log(image1);
 
 let totalClicks = 0;
-let clicksAllowed = 5;
+let clicksAllowed = 25;
 
 const state = {
 	allToys: [],
@@ -67,8 +67,8 @@ state.allToys.push(
 	wineglass
 );
 
-function randomNumber() {
-	return Math.floor(Math.random() * state.allToys.length);
+function randomNumber(array) {
+	return Math.floor(Math.random() * array.length);
 }
 
 function comparePic(imgIndex) {
@@ -81,26 +81,51 @@ function comparePic(imgIndex) {
 		return true;
 	}
 }
-let lastViewing = [];
+
+let viewingArray = [];
+function makeViewingArray() {
+	return Array.from(Array(19).keys());
+}
+viewingArray = makeViewingArray();
+
+// let lastViewing = [];
 function displayImages() {
+	let randomIndex;
 	let imgIndex1;
 	let imgIndex2;
 	let imgIndex3;
 
-	while (
-		imgIndex1 === imgIndex2 ||
-		imgIndex2 === imgIndex3 ||
-		imgIndex3 === imgIndex1 ||
-		lastViewing.includes(imgIndex1) ||
-		lastViewing.includes(imgIndex2) ||
-		lastViewing.includes(imgIndex3)
-	) {
-		imgIndex1 = randomNumber();
-		imgIndex2 = randomNumber();
-		imgIndex3 = randomNumber();
+	randomIndex = randomNumber(viewingArray);
+	imgIndex1 = viewingArray[randomIndex];
+	// remove index1 replenish list if needed
+	viewingArray.splice(randomIndex, 1);
+	if (viewingArray.length == 0) {
+		viewingArray = makeViewingArray();
 	}
 
-	lastViewing = [imgIndex1, imgIndex2, imgIndex3];
+	do {
+		randomIndex = randomNumber(viewingArray);
+		imgIndex2 = viewingArray[randomIndex];
+	} while (imgIndex2 === imgIndex1);
+	//remove index2 and replenish if needed
+	viewingArray.splice(randomIndex, 1);
+	if (viewingArray.length == 0) {
+		viewingArray = makeViewingArray();
+	}
+
+	// get index3 from list, and make sure it is different
+	// from index1 and index2
+	do {
+		randomIndex = randomNumber(viewingArray);
+		imgIndex3 = viewingArray[randomIndex];
+	} while (imgIndex3 === imgIndex1 || imgIndex3 === imgIndex1);
+	// remove index3 from list and replenish if needed
+	viewingArray.splice(randomIndex, 1);
+	if (viewingArray.length == 0) {
+		viewingArray = makeViewingArray();
+	}
+
+	console.log(imgIndex1, imgIndex2, imgIndex3);
 
 	image1.src = state.allToys[imgIndex1].src;
 	image1.alt = state.allToys[imgIndex1].name;
