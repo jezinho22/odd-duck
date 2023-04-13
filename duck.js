@@ -71,19 +71,40 @@ function randomNumber() {
 	return Math.floor(Math.random() * state.allToys.length);
 }
 
+function comparePic(imgIndex) {
+	console.log("comparePic firing");
+	if (
+		image1.alt === state.allToys[imgIndex].name ||
+		image2.alt === state.allToys[imgIndex].name ||
+		image3.alt === state.allToys[imgIndex].name
+	) {
+		return true;
+	}
+}
 function displayImages() {
-	let imgIndex1;
-	let imgIndex2;
-	let imgIndex3;
+	let imgIndex1 = randomNumber();
+	let imgIndex2 = randomNumber();
+	let imgIndex3 = randomNumber();
+
 	while (
-		imgIndex1 === imgIndex2 ||
-		imgIndex2 === imgIndex3 ||
-		imgIndex3 === imgIndex1
+		comparePic(imgIndex1) ||
+		comparePic(imgIndex2) ||
+		comparePic(imgIndex3)
 	) {
 		imgIndex1 = randomNumber();
 		imgIndex2 = randomNumber();
 		imgIndex3 = randomNumber();
+		while (
+			imgIndex1 === imgIndex2 ||
+			imgIndex2 === imgIndex3 ||
+			imgIndex3 === imgIndex1
+		) {
+			imgIndex1 = randomNumber();
+			imgIndex2 = randomNumber();
+			imgIndex3 = randomNumber();
+		}
 	}
+
 	image1.src = state.allToys[imgIndex1].src;
 	image1.alt = state.allToys[imgIndex1].name;
 	image1.title = state.allToys[imgIndex1].name;
@@ -115,6 +136,52 @@ function displayResults() {
 		ul.appendChild(li);
 	}
 }
+
+function displayChart() {
+	const toyNames = [];
+	const toyViews = [];
+	const toyClicks = [];
+	for (i = 0; i < state.allToys.length; i++) {
+		let toy = state.allToys[i];
+
+		toyNames.push(toy.name);
+		toyViews.push(toy.views);
+		toyClicks.push(toy.clicks);
+	}
+	const data = {
+		labels: toyNames,
+		datasets: [
+			{
+				label: "Times viewed",
+				data: toyViews,
+				backgroundColor: ["lightblue"],
+				borderColor: ["darkblue"],
+				borderWidth: 1,
+			},
+			{
+				label: "Times chosen",
+				data: toyClicks,
+				backgroundColor: ["lightred"],
+				borderColor: ["darkred"],
+				borderWidth: 1,
+			},
+		],
+	};
+	const config = {
+		type: "bar",
+		data: data,
+		options: {
+			scales: {
+				y: {
+					beginAtZero: true,
+				},
+			},
+		},
+	};
+	let chartSpace = document.querySelector("#myChart");
+	new Chart(chartSpace, config);
+}
+
 function picClick(event) {
 	console.log("picClick is firing");
 	let toyName = event.target.alt;
@@ -128,6 +195,7 @@ function picClick(event) {
 	if (totalClicks == clicksAllowed) {
 		toyContainer.removeEventListener("click", picClick);
 		displayResults();
+		displayChart();
 		// toyContainer.className += " not-clickable";
 	} else {
 		displayImages();
