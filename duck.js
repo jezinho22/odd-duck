@@ -11,7 +11,9 @@ let clearData = document.querySelector("#clearData");
 const state = {
 	allToys: [],
 };
-//
+
+let globalChart = {};
+
 //check if there are locally stored results
 if (localStorage.getItem("state")) {
 	console.log("local storage exists!");
@@ -22,7 +24,7 @@ if (localStorage.getItem("state")) {
 }
 
 let totalClicks = 0;
-let clicksAllowed = 25;
+let clicksAllowed = 3;
 
 function Toy(name, src, views, clicks) {
 	this.name = name;
@@ -213,9 +215,12 @@ function displayChart() {
 		},
 	};
 	let chartSpace = document.querySelector("#myChart");
+	// globalChart?.destroy();
+	// globalChart = new Chart(chartSpace, config);
 	new Chart(chartSpace, config);
 }
 
+//data persistence functions
 function saveState() {
 	let stateStringified = JSON.stringify(state);
 	localStorage.setItem("state", stateStringified);
@@ -226,7 +231,6 @@ function retrieveState() {
 		return JSON.parse(localStorage.getItem("state"));
 	}
 }
-
 function recreateState(parsedState) {
 	state.allToys = [];
 	for (i = 0; i < parsedState.allToys.length; i++) {
@@ -263,24 +267,41 @@ function picClick(event) {
 
 toyContainer.addEventListener("click", picClick);
 
+// set up reset page button
 resetButton.addEventListener("click", function () {
-	alert("Em obras - Not yet working");
-	//restart pics
-	//reset click count
-	//remove graph and results
+	// alert("Em obras - Not yet working");
+	// reset everything
+	resetAll();
 });
 
+// set up clear data button
 clearData.addEventListener("click", function () {
-	alert("Em obras - Currently only clearing local storage");
+	// alert("Em obras - Currently only clearing local storage");
 	localStorage.clear();
 	for (let i = 0; i < state.allToys.length; i++) {
 		state.allToys[i].clicks = 0;
 		state.allToys[i].views = 0;
 	}
-	//restart pics
-	//reset click count
-	//remove graph
+	resetAll();
 });
+
+function resetAll() {
+	//reset click count
+	totalClicks = 0;
+	//remove results
+	let lis = document.querySelectorAll("#results li");
+	for (let i = 0; i < lis.length; i++) {
+		lis[i].remove();
+	}
+	//remove graph
+	// document.querySelector("#myChart").remove();
+	// let newCanvas = document.createElement("canvas");
+	// newCanvas.className = "myChart";
+	// document.querySelector("#chartSection").appendChild(newCanvas);
+	//restart pics
+	displayImages();
+	toyContainer.addEventListener("click", picClick);
+}
 
 // let retrieved = retrieveState();
 // recreateState(retrieved);
