@@ -273,6 +273,10 @@ resetButton.addEventListener("click", function () {
 clearData.addEventListener("click", function () {
 	alert("Em obras - Currently only clearing local storage");
 	localStorage.clear();
+	for (let i = 0; i < state.allToys.length; i++) {
+		state.allToys[i].clicks = 0;
+		state.allToys[i].views = 0;
+	}
 	//restart pics
 	//reset click count
 	//remove graph
