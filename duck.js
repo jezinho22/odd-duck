@@ -5,67 +5,78 @@ let image1 = document.querySelector(".toyContainer img:first-child");
 let image2 = document.querySelector(".toyContainer img:nth-child(2)");
 let image3 = document.querySelector(".toyContainer img:nth-child(3)");
 
-console.log(image1);
-
-let totalClicks = 0;
-let clicksAllowed = 25;
+let resetButton = document.querySelector("#resetSurvey");
+let clearData = document.querySelector("#clearData");
 
 const state = {
 	allToys: [],
 };
+//
+//check if there are locally stored results
+if (localStorage.getItem("state")) {
+	console.log("local storage exists!");
+	recreateState(retrieveState());
+} else {
+	console.log("no local storage");
+	createState();
+}
 
-function Toy(name, src) {
+let totalClicks = 0;
+let clicksAllowed = 25;
+
+function Toy(name, src, views, clicks) {
 	this.name = name;
 	this.src = src;
-	this.views = 5;
-	this.clicks = 1;
+	this.views = views;
+	this.clicks = clicks;
 	// console.log(this.name + " created");
 }
 Toy.prototype.perCentLiked = function () {
 	console.log(this.views);
 	return Math.round((this.clicks / this.views) * 100) + "%";
 };
-
-let bag = new Toy("bag", "./images/bag.jpg");
-let banana = new Toy("banana", "./images/banana.jpg");
-let bathroom = new Toy("bathroom", "./images/bathroom.jpg");
-let boots = new Toy("boots", "./images/boots.jpg");
-let breakfast = new Toy("breakfast", "./images/breakfast.jpg");
-let bubblegum = new Toy("bubblegum", "./images/bubblegum.jpg");
-let chair = new Toy("chair", "./images/chair.jpg");
-let cthulhu = new Toy("cthulhu", "./images/cthulhu.jpg");
-let dogduck = new Toy("dog-duck", "./images/dog-duck.jpg");
-let dragon = new Toy("dragon", "./images/dragon.jpg");
-let pen = new Toy("pen", "./images/pen.jpg");
-let petsweep = new Toy("pet-sweep", "./images/pet-sweep.jpg");
-let scissors = new Toy("scissors", "./images/scissors.jpg");
-let shark = new Toy("shark", "./images/shark.jpg");
-let sweep = new Toy("sweep", "./images/sweep.jpg");
-let tauntaun = new Toy("tauntaun", "./images/tauntaun.jpg");
-let unicorn = new Toy("unicorn", "./images/unicorn.jpg");
-let watercan = new Toy("water-can", "./images/water-can.jpg");
-let wineglass = new Toy("wine-glass", "./images/wine-glass.jpg");
-state.allToys.push(
-	bag,
-	banana,
-	bathroom,
-	boots,
-	breakfast,
-	bubblegum,
-	chair,
-	cthulhu,
-	dogduck,
-	dragon,
-	pen,
-	petsweep,
-	scissors,
-	shark,
-	sweep,
-	tauntaun,
-	unicorn,
-	watercan,
-	wineglass
-);
+function createState() {
+	let bag = new Toy("bag", "./images/bag.jpg", 0, 0);
+	let banana = new Toy("banana", "./images/banana.jpg", 0, 0);
+	let bathroom = new Toy("bathroom", "./images/bathroom.jpg", 0, 0);
+	let boots = new Toy("boots", "./images/boots.jpg", 0, 0);
+	let breakfast = new Toy("breakfast", "./images/breakfast.jpg", 0, 0);
+	let bubblegum = new Toy("bubblegum", "./images/bubblegum.jpg", 0, 0);
+	let chair = new Toy("chair", "./images/chair.jpg", 0, 0);
+	let cthulhu = new Toy("cthulhu", "./images/cthulhu.jpg", 0, 0);
+	let dogduck = new Toy("dog-duck", "./images/dog-duck.jpg", 0, 0);
+	let dragon = new Toy("dragon", "./images/dragon.jpg", 0, 0);
+	let pen = new Toy("pen", "./images/pen.jpg", 0, 0);
+	let petsweep = new Toy("pet-sweep", "./images/pet-sweep.jpg", 0, 0);
+	let scissors = new Toy("scissors", "./images/scissors.jpg", 0, 0);
+	let shark = new Toy("shark", "./images/shark.jpg", 0, 0);
+	let sweep = new Toy("sweep", "./images/sweep.jpg", 0, 0);
+	let tauntaun = new Toy("tauntaun", "./images/tauntaun.jpg", 0, 0);
+	let unicorn = new Toy("unicorn", "./images/unicorn.jpg", 0, 0);
+	let watercan = new Toy("water-can", "./images/water-can.jpg", 0, 0);
+	let wineglass = new Toy("wine-glass", "./images/wine-glass.jpg", 0, 0);
+	state.allToys.push(
+		bag,
+		banana,
+		bathroom,
+		boots,
+		breakfast,
+		bubblegum,
+		chair,
+		cthulhu,
+		dogduck,
+		dragon,
+		pen,
+		petsweep,
+		scissors,
+		shark,
+		sweep,
+		tauntaun,
+		unicorn,
+		watercan,
+		wineglass
+	);
+}
 
 function randomNumber(array) {
 	return Math.floor(Math.random() * array.length);
@@ -157,6 +168,7 @@ function displayResults() {
 		].perCentLiked()}`;
 		ul.appendChild(li);
 	}
+	saveState();
 }
 
 function displayChart() {
@@ -204,6 +216,31 @@ function displayChart() {
 	new Chart(chartSpace, config);
 }
 
+function saveState() {
+	let stateStringified = JSON.stringify(state);
+	localStorage.setItem("state", stateStringified);
+}
+function retrieveState() {
+	if (localStorage.getItem("state")) {
+		console.log(localStorage.getItem("state"));
+		return JSON.parse(localStorage.getItem("state"));
+	}
+}
+
+function recreateState(parsedState) {
+	state.allToys = [];
+	for (i = 0; i < parsedState.allToys.length; i++) {
+		let newToy = new Toy(
+			parsedState.allToys[i].name,
+			parsedState.allToys[i].src,
+			parsedState.allToys[i].views,
+			parsedState.allToys[i].clicks
+		);
+		state.allToys.push(newToy);
+	}
+	console.table(state.allToys);
+}
+
 function picClick(event) {
 	console.log("picClick is firing");
 	let toyName = event.target.alt;
@@ -225,3 +262,22 @@ function picClick(event) {
 }
 
 toyContainer.addEventListener("click", picClick);
+
+resetButton.addEventListener("click", function () {
+	alert("Em obras - Not yet working");
+	//restart pics
+	//reset click count
+	//remove graph and results
+});
+
+clearData.addEventListener("click", function () {
+	alert("Em obras - Currently only clearing local storage");
+	localStorage.clear();
+	//restart pics
+	//reset click count
+	//remove graph
+});
+
+// let retrieved = retrieveState();
+// recreateState(retrieved);
+// localStorage.clear();

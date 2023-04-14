@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 }
 body {
-	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+	font-family: "IM Fell Great Primer", serif;
 }
 header {
 	display: flex;
@@ -19,6 +19,19 @@ h1 {
 	font-size: 40px;
 	display: inline-block;
 	align-self: center;
+}
+
+button {
+	align-self: center;
+	color: bisque;
+	background-color: blue;
+	border: none;
+	font-family: inherit;
+	margin: 0 20px;
+	justify-self: end;
+}
+button:hover {
+	font-size: 1.05em;
 }
 main {
 	display: grid;
